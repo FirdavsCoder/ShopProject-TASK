@@ -1,3 +1,4 @@
+// @ts-ignore
 import pg, { Pool } from "src/lib/pg";
 import { config } from "../common/config";
 
@@ -13,24 +14,24 @@ const pool = new Pool({
 
 export class Postgres {
   async fetch<T>(SQL: string, ...args: any[]): Promise<T> {
-    const clien = await pool.connect();
+    const client = await pool.connect();
     try {
       const {
         rows: [row],
-      } = await clien.query(SQL, args);
+      } = await client.query(SQL, args);
       return row;
     } finally {
-      clien.release();
+      client.release();
     }
   }
 
   async fetchAll<T>(SQL: string, ...args: any[]): Promise<T[]> {
-    const clien = await pool.connect();
+    const client = await pool.connect();
     try {
-      const { rows } = await clien.query(SQL, args);
+      const { rows } = await client.query(SQL, args);
       return rows;
     } finally {
-      clien.release();
+      client.release();
     }
   }
 
