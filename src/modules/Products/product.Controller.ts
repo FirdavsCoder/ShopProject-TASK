@@ -1,6 +1,8 @@
 import {ProductService} from "./product.Service";
 import {ResData} from "../../common/ResData";
 import {Request, Response} from "express";
+import {productValidation} from "./Validation/product.Validation";
+import {BadRequestException} from "../../common/exception/exception";
 
 interface IProductBody {
     name: string;
@@ -31,6 +33,7 @@ export class ProductController {
     async getOne(req: Request, res: Response) {
         try {
             const id: number = Number(req.params.id);
+            console.log(id)
             const response: ResData = await this.productService.getOneById(id);
             res.status(response.statusCode).json(response)
         }
@@ -44,6 +47,10 @@ export class ProductController {
     async insert(req: Request, res: Response) {
         try {
             const product: Required<IProductBody> = req.body;
+            const validatedData = productValidation.validate(product);
+            if (validatedData.error) {
+                throw new BadRequestException(validatedData.error.message)
+            }
             const response: ResData = await this.productService.insert(product);
             res.status(response.statusCode).json(response)
         }
@@ -57,6 +64,13 @@ export class ProductController {
         try {
             const id: number = Number(req.params?.id);
             const product: Required<IProductBody> = req.body;
+
+            const validatedData = productValidation.validate(product);
+            if (validatedData.error) {
+                throw new BadRequestException(validatedData.error.message)
+            }
+            
+
             const response: ResData = await this.productService.update(id, product);
             res.status(response.statusCode).json(response)
         }

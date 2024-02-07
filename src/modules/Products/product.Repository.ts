@@ -12,7 +12,7 @@ export class ProductRepository extends Postgres{
     }
 
     async getAll<T>(): Promise<T[]> {
-        return await this.fetch("select * from products")
+        return await this.fetchAll("select * from products")
     }
 
 

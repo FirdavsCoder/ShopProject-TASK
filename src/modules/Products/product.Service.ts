@@ -33,10 +33,9 @@ export class ProductService {
 
     async getOneById(id: number): Promise<ResData> {
         const foundProduct: IProduct[] = await this.productRepository.getOneById<IProduct>(id);
-        if (!foundProduct.length) {
+        if (!foundProduct) {
             throw new BadRequestException("Product not found")
         }
-
         return new ResData("Product found", 200, foundProduct);
     }
 
@@ -44,7 +43,7 @@ export class ProductService {
 
     async insert(product: IProductBody): Promise<ResData> {
         const foundProduct: IProduct[] = await this.productRepository.findName(product.name);
-        if (foundProduct.length) {
+        if (foundProduct) {
             throw new BadRequestException("Product already exists")
         }
         const newProduct = new ProductEntity(product.name, product.price, product.count);
@@ -56,7 +55,7 @@ export class ProductService {
 
     async update(id: number, product: IProductBody): Promise<ResData> {
         const foundProduct = await this.productRepository.getOneById<IProduct>(id);
-        if (!foundProduct.length) {
+        if (!foundProduct) {
             throw new BadRequestException("Product not found")
         }
 
@@ -71,7 +70,7 @@ export class ProductService {
 
     async delete(id: number): Promise<ResData> {
         const foundProduct = await this.productRepository.getOneById<IProduct>(id);
-        if (!foundProduct.length) {
+        if (!foundProduct) {
             throw new BadRequestException("Product not found")
         }
         const deletedProduct = await this.productRepository.delete<IProduct>(id);
