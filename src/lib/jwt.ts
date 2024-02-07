@@ -8,4 +8,3 @@ export function jwtSign(data:any) :string{
 export function verifyToken(data: any) :any{
   return jwt.verify(data, config.jwtKey)
 }
-

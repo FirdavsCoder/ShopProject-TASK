@@ -1,6 +1,5 @@
-// @ts-ignore
-import pg, { Pool } from "src/lib/pg";
-import { config } from "../common/config";
+import pg, { Pool } from "pg";
+import { config } from "../common/config/index";
 
 // const PGPool = pg.Pool;
 
