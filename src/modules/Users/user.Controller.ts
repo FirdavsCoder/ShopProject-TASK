@@ -1,27 +1,27 @@
-import {ProductService} from "./product.Service";
+import {UserService} from "./user.Service";
 import {ResData} from "../../common/ResData";
 import {Request, Response} from "express";
-import {productValidation} from "./Validation/product.Validation";
+import {userValidation} from "./Validation/user.Validation";
+import Joi from "joi";
 import {BadRequestException} from "../../common/exception/exception";
 
-interface IProductBody {
-    name: string;
-    price: number;
-    count: number;
+
+interface IUserBody {
+    login: string;
+    password: string;
+    balance: number;
 }
 
-export class ProductController {
-    productService: ProductService;
+export class UserController {
+    userService: UserService;
 
-    constructor(productService: ProductService) {
-        this.productService = productService;
+    constructor(userService: UserService) {
+        this.userService = userService;
     }
-
-
 
     async getAll(req: Request, res: Response) {
         try {
-            const response: ResData = await this.productService.getAll()
+            const response: ResData = await this.userService.getAll()
             res.status(response.statusCode).json(response)
         } catch (error: any) {
             const resData = new ResData(error.message, error.statusCode || 500, [null], error);
@@ -29,11 +29,10 @@ export class ProductController {
         }
     }
 
-
     async getOne(req: Request, res: Response) {
         try {
-            const id: number = Number(req.params.id);
-            const response: ResData = await this.productService.getOneById(id);
+            const id: number = Number(req.params?.id);
+            const response: ResData = await this.userService.getOneById(id);
             res.status(response.statusCode).json(response)
         }
         catch (error: any) {
@@ -42,35 +41,31 @@ export class ProductController {
         }
     }
 
-
     async insert(req: Request, res: Response) {
         try {
-            const product: Required<IProductBody> = req.body;
-            const validatedData = productValidation.validate(product);
+            const user: Required<IUserBody> = req.body;
+            const validatedData: Joi.ValidationResult = userValidation.validate(user);
             if (validatedData.error) {
                 throw new BadRequestException(validatedData.error.message)
             }
-            const response: ResData = await this.productService.insert(product);
-            res.status(response.statusCode).json(response)
+            const response: ResData = await this.userService.insert(user);
+            return res.status(response.statusCode).json(response)
         }
         catch (error: any) {
             const resData = new ResData(error.message, error.statusCode || 500, [null], error);
-            res.status(resData.statusCode).json(resData);
+            return res.status(resData.statusCode).json(resData);
         }
     }
 
     async update(req: Request, res: Response) {
         try {
-            const id: number = Number(req.params?.id);
-            const product: Required<IProductBody> = req.body;
-
-            const validatedData = productValidation.validate(product);
+            const id: number = Number(req.params.id);
+            const user: Required<IUserBody> = req.body;
+            const validatedData: Joi.ValidationResult = userValidation.validate(user);
             if (validatedData.error) {
                 throw new BadRequestException(validatedData.error.message)
             }
-
-
-            const response: ResData = await this.productService.update(id, product);
+            const response: ResData = await this.userService.update(id, user);
             res.status(response.statusCode).json(response)
         }
         catch (error: any) {
@@ -81,8 +76,8 @@ export class ProductController {
 
     async delete(req: Request, res: Response) {
         try {
-            const id: number = Number(req.params?.id);
-            const response: ResData = await this.productService.delete(id);
+            const id: number = Number(req.params.id);
+            const response: ResData = await this.userService.delete(id);
             res.status(response.statusCode).json(response)
         }
         catch (error: any) {

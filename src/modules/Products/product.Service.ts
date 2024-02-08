@@ -25,14 +25,13 @@ export class ProductService {
     }
     async getAll(): Promise<ResData> {
         const foundProducts: IProduct[] = await this.productRepository.getAll<IProduct>();
-        console.log(foundProducts);
         return new ResData("All products", 200, foundProducts);
     }
 
 
 
     async getOneById(id: number): Promise<ResData> {
-        const foundProduct: IProduct[] = await this.productRepository.getOneById<IProduct>(id);
+        const foundProduct = await this.productRepository.getOneById<IProduct>(id);
         if (!foundProduct) {
             throw new BadRequestException("Product not found")
         }
@@ -47,7 +46,6 @@ export class ProductService {
             throw new BadRequestException("Product already exists")
         }
         const newProduct = new ProductEntity(product.name, product.price, product.count);
-        console.log(newProduct);
 
         const insertedProduct = await this.productRepository.insert<IProduct>(newProduct);
         return new ResData("Product inserted", 201, insertedProduct);

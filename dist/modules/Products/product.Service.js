@@ -21,7 +21,6 @@ class ProductService {
     getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             const foundProducts = yield this.productRepository.getAll();
-            console.log(foundProducts);
             return new ResData_1.ResData("All products", 200, foundProducts);
         });
     }
@@ -41,7 +40,6 @@ class ProductService {
                 throw new exception_1.BadRequestException("Product already exists");
             }
             const newProduct = new product_Entity_1.ProductEntity(product.name, product.price, product.count);
-            console.log(newProduct);
             const insertedProduct = yield this.productRepository.insert(newProduct);
             return new ResData_1.ResData("Product inserted", 201, insertedProduct);
         });
