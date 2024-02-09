@@ -72,5 +72,7 @@ export class UserService {
         const deletedUser = await this.userRepository.delete<IUser>(id);
         return new ResData("User deleted", 200, deletedUser);
     }
+
+
 }
 
